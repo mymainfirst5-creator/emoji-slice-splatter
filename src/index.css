@@ -2,41 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Ninja Fruit Game Design System - Vibrant and Dynamic */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Game Background */
+    --background: 250 20% 8%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Game UI */
+    --card: 250 15% 12%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 250 15% 10%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Fruit Colors */
+    --primary: 25 95% 55%; /* Orange */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 140 75% 45%; /* Green */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 350 85% 60%; /* Red */
+    --accent-foreground: 0 0% 100%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 250 10% 25%;
+    --muted-foreground: 0 0% 70%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Special Items */
+    --destructive: 0 95% 50%; /* Bomb Red */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --bonus: 45 100% 50%; /* Star Gold */
+    --bonus-foreground: 250 20% 8%;
 
-    --radius: 0.5rem;
+    /* Game Gradients */
+    --gradient-game: linear-gradient(135deg, hsl(250 30% 15%), hsl(250 20% 8%));
+    --gradient-fruit: linear-gradient(135deg, hsl(var(--primary)), hsl(25 85% 65%));
+    --gradient-bomb: linear-gradient(135deg, hsl(0 80% 40%), hsl(0 95% 50%));
+    --gradient-star: linear-gradient(135deg, hsl(45 100% 50%), hsl(50 100% 70%));
+
+    /* Effects */
+    --glow-primary: 0 0 20px hsl(var(--primary) / 0.6);
+    --glow-accent: 0 0 20px hsl(var(--accent) / 0.6);
+    --glow-bonus: 0 0 25px hsl(var(--bonus) / 0.8);
+
+    --border: 250 15% 20%;
+    --input: 250 15% 15%;
+    --ring: 25 95% 55%;
+
+    --radius: 1rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +117,133 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-game);
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  /* Game UI Components */
+  .game-ui {
+    @apply backdrop-blur-sm bg-card/80 border border-border/50 rounded-2xl shadow-lg;
+  }
+  
+  .fruit-item {
+    @apply absolute cursor-pointer select-none;
+    filter: drop-shadow(var(--glow-primary));
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .fruit-item:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(var(--glow-accent));
+  }
+  
+  .cut-effect {
+    @apply absolute pointer-events-none;
+    animation: cut-burst 0.6s ease-out forwards;
+  }
+  
+  .particle {
+    @apply absolute rounded-full;
+    animation: particle-fly 0.8s ease-out forwards;
+  }
+  
+  .score-popup {
+    @apply absolute text-2xl font-bold pointer-events-none;
+    animation: score-float 1s ease-out forwards;
+  }
+}
+
+@layer utilities {
+  .animate-fruit-spin {
+    animation: fruit-spin 3s linear infinite;
+  }
+  
+  .animate-bounce-in {
+    animation: bounce-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .animate-explosion {
+    animation: explosion 0.5s ease-out forwards;
+  }
+}
+
+/* Game Animations */
+@keyframes fruit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) rotate(180deg);
+  }
+  70% {
+    transform: scale(0.9) rotate(270deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes cut-burst {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes particle-fly {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx, 0), var(--dy, 0)) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes score-float {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-60px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes explosion {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.8) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5) rotate(360deg);
+    opacity: 0;
   }
 }
